@@ -89,5 +89,56 @@
     <label><input type="checkbox"> Had nap? </label><br>
     <label><input type="checkbox"> Been for potty?</label><br>
     <label><input type="checkbox"> Played with Suki?</label><br>
+
+    <script>
+  // Select all checkboxes
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  
+  // Container for summary message (create and insert it)
+  const summary = document.createElement('p');
+  summary.style.fontWeight = 'bold';
+  summary.style.marginTop = '20px';
+  summary.style.textAlign = 'center';
+  document.querySelector('form').appendChild(summary);
+
+  // Function to update summary text
+  function updateSummary() {
+    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+    if (checkedCount === checkboxes.length) {
+      summary.textContent = "🎉 Great job, Suki had a fun day!";
+    } else if (checkedCount === 0) {
+      summary.textContent = "Don't forget to check off Suki's activities!";
+    } else {
+      summary.textContent = `Suki completed ${checkedCount} of ${checkboxes.length} activities.`;
+    }
+  }
+
+  // Load saved checkbox states from localStorage
+  function loadCheckboxes() {
+    checkboxes.forEach((cb, index) => {
+      const saved = localStorage.getItem('checkbox_' + index);
+      cb.checked = saved === 'true';
+    });
+  }
+
+  // Save checkbox states to localStorage when changed
+  function saveCheckboxes() {
+    checkboxes.forEach((cb, index) => {
+      localStorage.setItem('checkbox_' + index, cb.checked);
+    });
+  }
+
+  // Set event listeners on checkboxes
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      saveCheckboxes();
+      updateSummary();
+    });
+  });
+
+  // Initialize on page load
+  loadCheckboxes();
+  updateSummary();
+</script>
     </body>
 </html>
